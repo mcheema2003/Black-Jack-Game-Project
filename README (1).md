@@ -24,8 +24,7 @@ The unique feature of this program is its dynamic probability analysis system, w
 
 ## Authors
 
-- [Your Name]
-- [Team Member Names]
+Muhammad Cheema
 
 ## Date Published
 
