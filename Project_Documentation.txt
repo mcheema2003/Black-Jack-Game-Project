@@ -1,54 +1,143 @@
-================================================================================
-                    BLACKJACK CASINO CARD GAME - PROJECT DOCUMENTATION
-================================================================================
+Team Name: Max Vertsappen Mentality 
+Team Members: Muhammad Cheema 
+Course: Discrete Structures 
+Date: December 2025 
 
---------------------------------------------------------------------------------
-1. TEAM INFORMATION
---------------------------------------------------------------------------------
+Project Information / Details : 
 
-Team Name: [Your Team Name]
-Team Members: [Your Name(s)]
-Course: Discrete Structures
-Date: December 2025
+WHAT PROBLEMS ARE WE SOLVING IN THIS PROJECT? 
 
---------------------------------------------------------------------------------
-2. PROJECT INFORMATION AND DETAILS
---------------------------------------------------------------------------------
+This project focuses on solving several computational and mathematical challenges 
+related to casino card games, specifically Blackjack. The main goal is to simulate a 
+realistic Blackjack game that follows standard casino rules, including accurate card 
+distribution and game outcomes. Another key challenge is calculating winning 
+probabilities in real time, which involves applying concepts from probability, 
+combinatorics, and statistical simulation. In real casinos, players usually make decisions 
+without knowing their exact odds, so this program helps make those probabilities visible 
+and easier to understand. The project also handles proper deck management by 
+dealing cards fairly from a standard 52-card deck without replacement, and it accounts 
+for the special case of Aces, which can count as either 1 or 11 depending on the 
+situation. 
 
-WHAT PROBLEMS ARE WE SOLVING IN THIS PROJECT?
+WHAT SOLUTIONS ARE WE IMPLEMENTING IN THE PROJECT? 
 
-This project addresses several computational and mathematical problems related to casino card games. The primary problem is simulating a realistic Blackjack game that accurately represents the rules, card distributions, and outcomes found in actual casinos. Additionally, the project tackles the challenge of calculating real-time winning probabilities, which requires understanding of probability theory, combinatorics, and statistical simulation. Players in real casinos often make decisions without knowing their actual chances of winning, so this program solves the problem of providing transparent probability information to help users understand the mathematics behind their choices. The program also addresses the challenge of proper deck management, ensuring cards are dealt fairly from a standard 52-card deck without replacement, and handles the complexity of Ace valuation where an Ace can count as either 1 or 11 depending on the hand total.
+The solution uses an object-oriented design in C++ to represent the different parts of 
+the game. A “Deck” class is responsible for managing the 52-card deck, shuffling it 
+using the Fisher–Yates algorithm, and keeping track of which cards have already been 
+dealt so probability calculations remain accurate. The Hand class manages the cards 
+held by a player or the dealer and calculates hand values, including the added 
+complexity of soft hands where an Ace can count as either 1 or 11. To estimate winning 
+chances, the “ProbabilityCalculator” class relies on Monte Carlo simulation, running 
+1,000 simulated games for each calculation. This approach produces reliable probability 
+estimates without the need for complicated mathematical formulas. The BlackjackGame 
+class ties everything together by controlling the overall game flow, handling player turns, 
+enforcing dealer rules based on standard casino behavior, managing bets, and 
+determining wins and losses. The program also includes a balance management 
+system that allows players to add more funds when they run out, helping to mimic the 
+experience of playing Blackjack in a real casino. 
 
+EXPLANATION OF CALCULATIONS AND ALGORITHM IMPLEMENTATION 
 
-WHAT SOLUTIONS ARE WE IMPLEMENTING IN THE PROJECT?
+The probability calculations in the program rely on several concepts from discrete 
+mathematics. The bust probability is calculated by counting how many cards left in the 
+deck would cause the player’s hand to go over 21, and then dividing that number by the 
+total number of remaining cards. For instance, if a player has a hand value of 15 and 
+there are 48 cards left in the deck, with 20 of them valued at 7 or higher, the bust 
+probability would be 20 out of 48, or about 41.67%. Calculating the dealer’s bust 
+probability is more complex, since the dealer’s final outcome depends on drawing 
+multiple cards while following the rule of hitting until reaching at least 17. Because of 
+this, the program uses Monte Carlo simulation. In each simulation, the dealer is dealt 
+random cards from the remaining deck until they either stand or bust. Repeating this 
+process many times allows the program to estimate the probability based on how often 
+the dealer busts. Hand value calculation uses a greedy approach to handle Aces. The 
+program first counts all Aces as 11 and sums the hand. If the total exceeds 21, it 
+reduces the value by 10 for each Ace, effectively changing its value from 11 to 1, until 
+the hand is valid or no more Aces remain. Finally, the deck is shuffled using the 
+Fisher–Yates algorithm, which ensures a fair and uniform random shuffle with linear 
+time complexity. 
 
-The solution implements an object-oriented approach using C++ classes to model the game components. The Deck class manages the 52-card deck with proper shuffling using the Fisher-Yates algorithm and tracks dealt cards to ensure accurate probability calculations. The Hand class handles card collection and value calculation, including the complex logic for soft hands where Aces can be valued as 1 or 11. The ProbabilityCalculator class uses Monte Carlo simulation to estimate winning probabilities by running 1000 simulated games for each probability calculation. This statistical approach provides accurate probability estimates without requiring complex analytical solutions. The BlackjackGame class orchestrates the entire game flow, managing player turns, dealer behavior according to standard casino rules, betting mechanics, and win/loss determination. The solution also implements a balance management system that allows players to add funds when they run out of money, simulating the real casino experience.
+WHAT IS THE PROGRAM OBJECTIVE? EXPLAIN HOW YOUR PROGRAM IS 
+INTERACTING WITH THE USER AND ITS PURPOSE 
 
+The goal of the program is to create a Blackjack simulation that is both educational and 
+fun, allowing players to see probability concepts in action as they play. The game runs 
+through a text-based console interface and starts by giving the user an initial balance of 
+$1000. The user is then asked to place a bet before each round. Once a bet is made, 
+two cards are dealt to both the player and the dealer, with one of the dealer’s cards kept 
+hidden.The program displays the current hands and provides a probability breakdown, 
+including the chance of busting on the next hit, an estimate of the dealer’s bust 
+probability, the player’s current chance of winning if they choose to stand, and the 
+probability of safely hitting without busting. The user can then decide whether to hit or 
+stand. Each time the player takes a hit, the probabilities are recalculated and shown 
+again based on the updated hand and the remaining cards in the deck. When the player 
+stands, the dealer reveals the hidden card and continues drawing cards according to 
+standard casino rules until reaching a hand value of at least 17. The program then 
+determines the outcome of the round, updates the player’s balance, and asks if they 
+want to play another hand. If the player runs out of money, the program offers the option 
+to add more funds. Overall, the program is designed to help users better understand 
+probability-based decision making while enjoying a classic card game. 
 
-EXPLANATION OF CALCULATIONS AND ALGORITHM IMPLEMENTATION
+HOW IS DISCRETE STRUCTURES IMPLEMENTED IN THE C++ PROGRAM? 
 
-The probability calculations use several discrete mathematics concepts. The bust probability is calculated by counting the number of cards in the remaining deck that would cause the player to exceed 21, then dividing by the total remaining cards. For example, if the player has 15 and there are 48 cards remaining with 20 cards valued 7 or higher, the bust probability is 20/48 = 41.67%. The dealer bust probability uses Monte Carlo simulation because the dealer's outcome depends on multiple sequential card draws following the rule of hitting until reaching 17 or higher. Each simulation deals random cards from the remaining deck until the dealer stands or busts, and the proportion of busted outcomes gives the probability estimate. The hand value calculation uses a greedy algorithm for Ace handling: first sum all card values treating Aces as 11, then while the total exceeds 21 and there are Aces counted as 11, reduce the total by 10 for each Ace converted to a value of 1. The shuffling algorithm implements Fisher-Yates shuffle which guarantees uniform random permutation with O(n) time complexity.
+Discrete structures play a key role in how the program is built. The deck of cards is 
+represented using sets and sequences, where each card is a unique element in a 
+standard 52-card deck. In the actual implementation, the deck is stored as a vector, 
+which acts as an ordered list that can be shuffled and dealt from during gameplay. 
+Combinatorics comes into play when calculating probabilities, since the program 
+determines outcomes by counting favorable cases and dividing by the total number of 
+possible cases. For example, if there are n cards left in the deck and k of them would 
+cause the player to bust, the probability of busting is simply k/n. Some graph-theory 
+ideas appear indirectly through game state transitions. Each game state defined by 
+factors like the player’s hand total, the dealer’s visible card, and the remaining deck can 
+transition to a new state depending on the actions taken by the player or dealer. Logic 
+and Boolean algebra are used throughout the program to control game flow, such as 
+checking whether a hand has busted (total greater than 21), whether it is a blackjack 
+(two cards totaling 21), or whether it is a soft hand that includes an Ace counted as 11. 
+Modular arithmetic shows up in the deck-shuffling process and in handling card values. 
+Overall, probability theory is the most important concept used, appearing in both direct 
+calculations like bust probability and in statistical methods such as Monte Carlo 
+simulation to estimate dealer outcomes. 
 
+WHAT ARE THE LIMITATIONS OF THE PROGRAM? 
 
-WHAT IS THE PROGRAM OBJECTIVES? EXPLAIN HOW YOUR PROGRAM IS INTERACTING WITH THE USER AND ITS PURPOSE
+The program also has several limitations worth noting. To begin with, it uses only a 
+single 52-card deck, while most real casinos use multiple decks to reduce the 
+effectiveness of card counting. In addition, the Monte Carlo simulation runs for only 
+1,000 iterations. While this is enough to give reasonably accurate estimates, the results 
+can still vary by about 1–3%. The program also does not include all common Blackjack 
+features, such as splitting pairs, doubling down, insurance bets, or surrender. Another 
+limitation is the random number generation, which relies on time-based seeding. This 
+can lead to predictable sequences if the game is started multiple times within the same 
+second. The program also does not save progress between sessions, meaning the 
+game state and balance are lost when the program closes. In the probability 
+simulations, cards are treated as if they are drawn with replacement, which slightly 
+reduces accuracy compared to real gameplay. Additionally, the lack of a graphical user 
+interface may make the program less accessible for users who are not comfortable with 
+text based applications. Finally, the program does not track long-term statistics across 
+multiple hands, such as overall win rate, average profit, or how closely the player 
+follows an optimal strategy. 
 
-The program objectives are to provide an educational and entertaining Blackjack simulation that demonstrates probability concepts in action. The program interacts with the user through a text-based console interface. Upon starting, the user sees their initial balance of $1000 and is prompted to enter a bet amount. After placing a bet, two cards are dealt to both the player and dealer, with one dealer card hidden. The program displays both hands and presents a probability analysis showing the chance of busting on the next hit, the estimated dealer bust probability, the current winning probability if standing, and the safe hit probability. The user then chooses to Hit (receive another card) or Stand (keep current hand). After each hit, the probabilities are recalculated and displayed based on the new hand total and remaining deck composition. When the player stands, the dealer reveals their hidden card and hits according to casino rules until reaching 17 or higher. The program determines the winner, updates the balance, and asks if the user wants to play again. If the balance reaches zero, the program offers to add more funds. The purpose is to teach users about probability-based decision making while enjoying a classic card game.
+RECOMMENDATIONS FOR IMPROVING THE LIMITATIONS 
 
-
-HOW IS DISCRETE STRUCTURES IMPLEMENTED IN THE C++ PROGRAM?
-
-Discrete structures are fundamental to this program's implementation. Sets and sequences are used to represent the deck of cards, where each card is a unique element in the set of 52 cards. The deck is implemented as a vector (dynamic array) representing an ordered sequence that can be shuffled and dealt from. Combinatorics appears in the probability calculations, where we count favorable outcomes divided by total possible outcomes to determine probabilities. The program uses basic counting principles: if there are n cards remaining and k cards would cause a bust, the bust probability is k/n. Graph theory concepts appear implicitly in the game state transitions, where each game state (player total, dealer up card, remaining deck) transitions to new states based on player and dealer actions. Logic and Boolean algebra are used extensively in conditional statements that determine game flow, such as checking if a hand is busted (total > 21), if a hand is a blackjack (exactly 2 cards totaling 21), or if a hand is soft (contains an Ace valued as 11). The modular arithmetic concept appears in the deck shuffling algorithm and card value wrapping. Probability theory is the most prominent discrete structure, implemented through both exact calculations (bust probability) and statistical estimation (Monte Carlo simulation for dealer outcomes).
-
-
-WHAT ARE THE LIMITATIONS OF THE PROGRAM?
-
-The program has several limitations. First, it uses only a single 52-card deck, whereas real casinos typically use 6-8 decks to make card counting more difficult. Second, the Monte Carlo simulation uses only 1000 iterations, which provides reasonable estimates but may have variance of 1-3% in probability values. Third, the program does not implement all Blackjack options such as splitting pairs, doubling down, insurance bets, or surrender. Fourth, the random number generator uses time-based seeding which may produce predictable sequences if games are started at the same second. Fifth, the program does not save game state between sessions, so progress is lost when the program exits. Sixth, the probability calculations assume cards are drawn with replacement in simulations, which slightly affects accuracy. Seventh, there is no graphical interface, limiting accessibility for users unfamiliar with text-based programs. Eighth, the program does not track statistics across multiple hands such as win rate, average profit, or optimal strategy adherence.
-
-
-RECOMMENDATIONS FOR IMPROVING THE LIMITATIONS
-
-To improve the single-deck limitation, implement a multi-deck shoe with 6-8 decks and a cut card that triggers reshuffling when reached. For better probability accuracy, increase Monte Carlo iterations to 10000 or implement exact probability calculations using dynamic programming. To add missing game features, implement splitting by creating a vector of hands, doubling by allowing bet modification after initial deal, and insurance by checking for dealer Ace up card. For improved randomness, use the C++11 random library with the Mersenne Twister engine seeded from hardware random sources. Implement file I/O to save and load game state, player balance, and statistics between sessions. Modify probability simulations to properly track and remove simulated cards from the remaining deck for more accurate calculations. Create a graphical user interface using a library like SDL or Qt to improve user experience and accessibility. Add a statistics tracking system that records hands played, win percentage, money won/lost, and compares player decisions to basic strategy recommendations. Finally, implement a basic strategy advisor that suggests the mathematically optimal play based on the current hand and dealer up card.
-
+Several improvements could be made to enhance the program. The single-deck 
+limitation could be addressed by using a multi-deck shoe with six to eight decks, along 
+with a cut card that triggers a reshuffle once it is reached. Probability accuracy could be 
+improved by increasing the number of Monte Carlo simulations to around 10,000 or by 
+switching to exact probability calculations using techniques like dynamic programming. 
+Missing Blackjack features could also be added. For example, splitting pairs could be 
+handled by managing multiple hands at once, doubling down could be implemented by 
+allowing players to increase their bet after the initial deal, and insurance could be 
+offered when the dealer shows an Ace. Randomness would improve by using the 
+C++11 random library with a Mersenne Twister engine seeded from a hardware-based 
+random source instead of relying on time-based seeding. The program could also be 
+expanded to save progress between sessions by adding file input and output for game 
+state, player balance, and statistics. Probability simulations could be made more 
+realistic by removing cards from the deck as they are simulated rather than treating 
+draws as independent. Adding a graphical interface using a library such as SDL or Qt 
+would make the game more accessible and user-friendly. Finally, a statistics tracking 
+system could be introduced to record long-term performance, such as win rate and total 
+profit, and a basic strategy advisor could be added to suggest the mathematically 
+optimal move based on the player’s hand and the dealer’s visible card.
 
 --------------------------------------------------------------------------------
 3. PSEUDOCODE
