@@ -1,0 +1,317 @@
+================================================================================
+                    BLACKJACK CASINO CARD GAME - PROJECT DOCUMENTATION
+================================================================================
+
+--------------------------------------------------------------------------------
+1. TEAM INFORMATION
+--------------------------------------------------------------------------------
+
+Team Name: [Your Team Name]
+Team Members: [Your Name(s)]
+Course: Discrete Structures
+Date: December 2025
+
+--------------------------------------------------------------------------------
+2. PROJECT INFORMATION AND DETAILS
+--------------------------------------------------------------------------------
+
+WHAT PROBLEMS ARE WE SOLVING IN THIS PROJECT?
+
+This project addresses several computational and mathematical problems related to casino card games. The primary problem is simulating a realistic Blackjack game that accurately represents the rules, card distributions, and outcomes found in actual casinos. Additionally, the project tackles the challenge of calculating real-time winning probabilities, which requires understanding of probability theory, combinatorics, and statistical simulation. Players in real casinos often make decisions without knowing their actual chances of winning, so this program solves the problem of providing transparent probability information to help users understand the mathematics behind their choices. The program also addresses the challenge of proper deck management, ensuring cards are dealt fairly from a standard 52-card deck without replacement, and handles the complexity of Ace valuation where an Ace can count as either 1 or 11 depending on the hand total.
+
+
+WHAT SOLUTIONS ARE WE IMPLEMENTING IN THE PROJECT?
+
+The solution implements an object-oriented approach using C++ classes to model the game components. The Deck class manages the 52-card deck with proper shuffling using the Fisher-Yates algorithm and tracks dealt cards to ensure accurate probability calculations. The Hand class handles card collection and value calculation, including the complex logic for soft hands where Aces can be valued as 1 or 11. The ProbabilityCalculator class uses Monte Carlo simulation to estimate winning probabilities by running 1000 simulated games for each probability calculation. This statistical approach provides accurate probability estimates without requiring complex analytical solutions. The BlackjackGame class orchestrates the entire game flow, managing player turns, dealer behavior according to standard casino rules, betting mechanics, and win/loss determination. The solution also implements a balance management system that allows players to add funds when they run out of money, simulating the real casino experience.
+
+
+EXPLANATION OF CALCULATIONS AND ALGORITHM IMPLEMENTATION
+
+The probability calculations use several discrete mathematics concepts. The bust probability is calculated by counting the number of cards in the remaining deck that would cause the player to exceed 21, then dividing by the total remaining cards. For example, if the player has 15 and there are 48 cards remaining with 20 cards valued 7 or higher, the bust probability is 20/48 = 41.67%. The dealer bust probability uses Monte Carlo simulation because the dealer's outcome depends on multiple sequential card draws following the rule of hitting until reaching 17 or higher. Each simulation deals random cards from the remaining deck until the dealer stands or busts, and the proportion of busted outcomes gives the probability estimate. The hand value calculation uses a greedy algorithm for Ace handling: first sum all card values treating Aces as 11, then while the total exceeds 21 and there are Aces counted as 11, reduce the total by 10 for each Ace converted to a value of 1. The shuffling algorithm implements Fisher-Yates shuffle which guarantees uniform random permutation with O(n) time complexity.
+
+
+WHAT IS THE PROGRAM OBJECTIVES? EXPLAIN HOW YOUR PROGRAM IS INTERACTING WITH THE USER AND ITS PURPOSE
+
+The program objectives are to provide an educational and entertaining Blackjack simulation that demonstrates probability concepts in action. The program interacts with the user through a text-based console interface. Upon starting, the user sees their initial balance of $1000 and is prompted to enter a bet amount. After placing a bet, two cards are dealt to both the player and dealer, with one dealer card hidden. The program displays both hands and presents a probability analysis showing the chance of busting on the next hit, the estimated dealer bust probability, the current winning probability if standing, and the safe hit probability. The user then chooses to Hit (receive another card) or Stand (keep current hand). After each hit, the probabilities are recalculated and displayed based on the new hand total and remaining deck composition. When the player stands, the dealer reveals their hidden card and hits according to casino rules until reaching 17 or higher. The program determines the winner, updates the balance, and asks if the user wants to play again. If the balance reaches zero, the program offers to add more funds. The purpose is to teach users about probability-based decision making while enjoying a classic card game.
+
+
+HOW IS DISCRETE STRUCTURES IMPLEMENTED IN THE C++ PROGRAM?
+
+Discrete structures are fundamental to this program's implementation. Sets and sequences are used to represent the deck of cards, where each card is a unique element in the set of 52 cards. The deck is implemented as a vector (dynamic array) representing an ordered sequence that can be shuffled and dealt from. Combinatorics appears in the probability calculations, where we count favorable outcomes divided by total possible outcomes to determine probabilities. The program uses basic counting principles: if there are n cards remaining and k cards would cause a bust, the bust probability is k/n. Graph theory concepts appear implicitly in the game state transitions, where each game state (player total, dealer up card, remaining deck) transitions to new states based on player and dealer actions. Logic and Boolean algebra are used extensively in conditional statements that determine game flow, such as checking if a hand is busted (total > 21), if a hand is a blackjack (exactly 2 cards totaling 21), or if a hand is soft (contains an Ace valued as 11). The modular arithmetic concept appears in the deck shuffling algorithm and card value wrapping. Probability theory is the most prominent discrete structure, implemented through both exact calculations (bust probability) and statistical estimation (Monte Carlo simulation for dealer outcomes).
+
+
+WHAT ARE THE LIMITATIONS OF THE PROGRAM?
+
+The program has several limitations. First, it uses only a single 52-card deck, whereas real casinos typically use 6-8 decks to make card counting more difficult. Second, the Monte Carlo simulation uses only 1000 iterations, which provides reasonable estimates but may have variance of 1-3% in probability values. Third, the program does not implement all Blackjack options such as splitting pairs, doubling down, insurance bets, or surrender. Fourth, the random number generator uses time-based seeding which may produce predictable sequences if games are started at the same second. Fifth, the program does not save game state between sessions, so progress is lost when the program exits. Sixth, the probability calculations assume cards are drawn with replacement in simulations, which slightly affects accuracy. Seventh, there is no graphical interface, limiting accessibility for users unfamiliar with text-based programs. Eighth, the program does not track statistics across multiple hands such as win rate, average profit, or optimal strategy adherence.
+
+
+RECOMMENDATIONS FOR IMPROVING THE LIMITATIONS
+
+To improve the single-deck limitation, implement a multi-deck shoe with 6-8 decks and a cut card that triggers reshuffling when reached. For better probability accuracy, increase Monte Carlo iterations to 10000 or implement exact probability calculations using dynamic programming. To add missing game features, implement splitting by creating a vector of hands, doubling by allowing bet modification after initial deal, and insurance by checking for dealer Ace up card. For improved randomness, use the C++11 random library with the Mersenne Twister engine seeded from hardware random sources. Implement file I/O to save and load game state, player balance, and statistics between sessions. Modify probability simulations to properly track and remove simulated cards from the remaining deck for more accurate calculations. Create a graphical user interface using a library like SDL or Qt to improve user experience and accessibility. Add a statistics tracking system that records hands played, win percentage, money won/lost, and compares player decisions to basic strategy recommendations. Finally, implement a basic strategy advisor that suggests the mathematically optimal play based on the current hand and dealer up card.
+
+
+--------------------------------------------------------------------------------
+3. PSEUDOCODE
+--------------------------------------------------------------------------------
+
+PROGRAM Blackjack
+
+BEGIN MAIN PROGRAM
+    SET playerMoney = 1000
+    DISPLAY "Welcome to Blackjack!"
+    DISPLAY "Starting balance: $" + playerMoney
+    
+    SET playAgain = 'y'
+    
+    WHILE playAgain == 'y' DO
+        
+        // Check if player is out of money
+        IF playerMoney <= 0 THEN
+            DISPLAY "You're out of money!"
+            DISPLAY "Would you like to add more balance? (y/n)"
+            INPUT addMore
+            
+            IF addMore == 'y' THEN
+                DISPLAY "How much would you like to add?"
+                INPUT addAmount
+                IF addAmount > 0 THEN
+                    playerMoney = playerMoney + addAmount
+                    DISPLAY "New balance: $" + playerMoney
+                ELSE
+                    DISPLAY "Invalid amount. Game over."
+                    EXIT LOOP
+                END IF
+            ELSE
+                DISPLAY "Game over."
+                EXIT LOOP
+            END IF
+        END IF
+        
+        // Initialize new round
+        CALL CreateDeck()
+        CALL ShuffleDeck()
+        SET playerHand = empty
+        SET dealerHand = empty
+        
+        // Get bet
+        DISPLAY "Current Balance: $" + playerMoney
+        DISPLAY "Enter your bet:"
+        INPUT bet
+        
+        IF bet > playerMoney THEN
+            bet = playerMoney
+            DISPLAY "Betting all: $" + bet
+        END IF
+        
+        // Deal initial cards
+        ADD DealCard() TO playerHand
+        ADD DealCard() TO dealerHand
+        ADD DealCard() TO playerHand
+        ADD DealCard() TO dealerHand
+        
+        // Display hands
+        DISPLAY "Dealer's Hand: [Hidden], " + dealerHand[1]
+        DISPLAY "Player's Hand: " + playerHand + " (Total: " + CalculateHandValue(playerHand) + ")"
+        
+        // Calculate and display probabilities
+        CALL DisplayProbabilities(playerHand, dealerHand[1])
+        
+        // Check for player blackjack
+        IF CalculateHandValue(playerHand) == 21 AND SIZE(playerHand) == 2 THEN
+            DISPLAY "BLACKJACK! You win 1.5x your bet!"
+            playerMoney = playerMoney + (bet * 1.5)
+            DISPLAY "Play again? (y/n)"
+            INPUT playAgain
+            CONTINUE TO NEXT ITERATION
+        END IF
+        
+        // Player's turn
+        SET playerStands = false
+        
+        WHILE CalculateHandValue(playerHand) <= 21 AND playerStands == false DO
+            DISPLAY "Choose action - (H)it or (S)tand:"
+            INPUT choice
+            
+            IF choice == 'h' OR choice == 'H' THEN
+                ADD DealCard() TO playerHand
+                DISPLAY "Player's Hand: " + playerHand + " (Total: " + CalculateHandValue(playerHand) + ")"
+                
+                IF CalculateHandValue(playerHand) <= 21 THEN
+                    CALL DisplayProbabilities(playerHand, dealerHand[1])
+                END IF
+                
+            ELSE IF choice == 's' OR choice == 'S' THEN
+                playerStands = true
+            END IF
+        END WHILE
+        
+        // Check if player busted
+        IF CalculateHandValue(playerHand) > 21 THEN
+            DISPLAY "BUST! You lose $" + bet
+            playerMoney = playerMoney - bet
+        ELSE
+            // Dealer's turn
+            DISPLAY "Dealer's Hand: " + dealerHand + " (Total: " + CalculateHandValue(dealerHand) + ")"
+            
+            WHILE CalculateHandValue(dealerHand) < 17 DO
+                DISPLAY "Dealer hits..."
+                ADD DealCard() TO dealerHand
+                DISPLAY "Dealer's Hand: " + dealerHand + " (Total: " + CalculateHandValue(dealerHand) + ")"
+            END WHILE
+            
+            // Determine winner
+            SET playerTotal = CalculateHandValue(playerHand)
+            SET dealerTotal = CalculateHandValue(dealerHand)
+            
+            IF dealerTotal > 21 THEN
+                DISPLAY "Dealer BUSTS! You win $" + bet
+                playerMoney = playerMoney + bet
+            ELSE IF playerTotal > dealerTotal THEN
+                DISPLAY "You WIN $" + bet
+                playerMoney = playerMoney + bet
+            ELSE IF playerTotal < dealerTotal THEN
+                DISPLAY "Dealer wins. You lose $" + bet
+                playerMoney = playerMoney - bet
+            ELSE
+                DISPLAY "PUSH! It's a tie."
+            END IF
+        END IF
+        
+        DISPLAY "Your balance: $" + playerMoney
+        DISPLAY "Play again? (y/n)"
+        INPUT playAgain
+        
+    END WHILE
+    
+    DISPLAY "Thanks for playing! Final balance: $" + playerMoney
+
+END MAIN PROGRAM
+
+
+FUNCTION CreateDeck()
+    SET deck = empty list
+    SET suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
+    SET names = ["Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"]
+    SET values = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+    
+    FOR each suit IN suits DO
+        FOR i = 0 TO 12 DO
+            CREATE card with name=names[i], suit=suit, value=values[i]
+            ADD card TO deck
+        END FOR
+    END FOR
+    
+    RETURN deck
+END FUNCTION
+
+
+FUNCTION ShuffleDeck()
+    FOR i = SIZE(deck) - 1 DOWN TO 1 DO
+        SET j = RANDOM(0 to i)
+        SWAP deck[i] WITH deck[j]
+    END FOR
+END FUNCTION
+
+
+FUNCTION DealCard()
+    SET card = LAST element of deck
+    REMOVE last element from deck
+    RETURN card
+END FUNCTION
+
+
+FUNCTION CalculateHandValue(hand)
+    SET total = 0
+    SET aceCount = 0
+    
+    FOR each card IN hand DO
+        total = total + card.value
+        IF card.name == "Ace" THEN
+            aceCount = aceCount + 1
+        END IF
+    END FOR
+    
+    WHILE total > 21 AND aceCount > 0 DO
+        total = total - 10
+        aceCount = aceCount - 1
+    END WHILE
+    
+    RETURN total
+END FUNCTION
+
+
+FUNCTION CalculateBustProbability(currentTotal, remainingCards)
+    SET bustCount = 0
+    
+    FOR each card IN remainingCards DO
+        SET cardValue = card.value
+        IF card.name == "Ace" THEN
+            IF currentTotal + 1 > 21 THEN
+                bustCount = bustCount + 1
+            END IF
+        ELSE IF currentTotal + cardValue > 21 THEN
+            bustCount = bustCount + 1
+        END IF
+    END FOR
+    
+    RETURN (bustCount / SIZE(remainingCards)) * 100
+END FUNCTION
+
+
+FUNCTION DisplayProbabilities(playerHand, dealerUpCard)
+    SET playerTotal = CalculateHandValue(playerHand)
+    SET remainingCards = GetRemainingCards()
+    
+    SET bustProb = CalculateBustProbability(playerTotal, remainingCards)
+    SET dealerBustProb = SimulateDealerBustProbability(dealerUpCard, remainingCards)
+    SET winProb = SimulateWinProbability(playerTotal, dealerUpCard, remainingCards)
+    SET safeHitProb = 100 - bustProb
+    
+    DISPLAY "--- Probability Analysis ---"
+    DISPLAY "Probability of busting on next hit: " + bustProb + "%"
+    DISPLAY "Estimated dealer bust probability: " + dealerBustProb + "%"
+    DISPLAY "Current winning probability (if standing): " + winProb + "%"
+    DISPLAY "Safe hit probability: " + safeHitProb + "%"
+END FUNCTION
+
+
+FUNCTION SimulateDealerBustProbability(dealerUpCard, remainingCards)
+    SET bustCount = 0
+    SET simulations = 1000
+    
+    FOR sim = 1 TO simulations DO
+        SET dealerTotal = dealerUpCard
+        SET aces = IF dealerUpCard == 11 THEN 1 ELSE 0
+        
+        // Simulate hole card
+        SET holeCard = RANDOM card from remainingCards
+        dealerTotal = dealerTotal + holeCard.value
+        IF holeCard.name == "Ace" THEN aces = aces + 1
+        
+        // Adjust for soft hand
+        WHILE dealerTotal > 21 AND aces > 0 DO
+            dealerTotal = dealerTotal - 10
+            aces = aces - 1
+        END WHILE
+        
+        // Dealer hits until 17+
+        WHILE dealerTotal < 17 DO
+            SET nextCard = RANDOM card from remainingCards
+            dealerTotal = dealerTotal + nextCard.value
+            IF nextCard.name == "Ace" THEN aces = aces + 1
+            
+            WHILE dealerTotal > 21 AND aces > 0 DO
+                dealerTotal = dealerTotal - 10
+                aces = aces - 1
+            END WHILE
+        END WHILE
+        
+        IF dealerTotal > 21 THEN
+            bustCount = bustCount + 1
+        END IF
+    END FOR
+    
+    RETURN (bustCount / simulations) * 100
+END FUNCTION
+
+END PROGRAM
